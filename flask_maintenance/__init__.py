@@ -2,8 +2,6 @@ import os
 from flask import (
     abort,
     current_app,
-    _app_ctx_stack,
-    _request_ctx_stack,
     request
 )
 
@@ -41,13 +39,9 @@ class Maintenance:
         """
         Maintenance mode handler.
         """
-        actx = _app_ctx_stack.top
-        rctx = _request_ctx_stack.top
+        if request.endpoint != 'static':
+            ins_path = os.path.join(current_app.instance_path,
+                                    'under_maintenance')
 
-        if actx and rctx:
-            if request.endpoint != 'static':
-                ins_path = os.path.join(current_app.instance_path,
-                                        'under_maintenance')
-
-                if os.path.exists(ins_path) and os.path.isfile(ins_path):
-                    abort(503)
+            if os.path.exists(ins_path) and os.path.isfile(ins_path):
+                abort(503)

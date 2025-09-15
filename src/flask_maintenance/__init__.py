@@ -33,7 +33,7 @@ class Maintenance:
             Flask application object.
         """
 
-        app.before_request_funcs.setdefault(None, []).append(self._handler)
+        app.before_request(self._handler)
 
     def _handler(self):
         """

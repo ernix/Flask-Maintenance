@@ -37,6 +37,12 @@ To enable Maintenance mode, run the following command:
 $ flask maintenance enable
 ```
 
+You can also redirect all requests to a specific URL:
+
+```
+$ flask maintenance enable --redirect="https://example.com/"
+```
+
 To disable Maintenance mode:
 
 ```

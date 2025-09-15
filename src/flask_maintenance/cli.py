@@ -17,17 +17,10 @@ def enable():
     Enable Maintenance mode.
     """
     result = False
-    ins_path = current_app.instance_path
-
-    if not os.path.exists(ins_path):
-        try:
-            os.makedirs(ins_path)
-        except Exception as e:  # pragma: no cover
-            click.echo(e)
-            return False
-
+    _path = current_app.extensions['maintenance'].lock_filepath()
+    os.makedirs(os.path.dirname(_path), exist_ok=True)
     try:
-        open(os.path.join(ins_path, 'under_maintenance'), 'w').close()
+        open(_path, 'w').close()
         result = True
     except Exception as e:  # pragma: no cover
         click.echo(e)
@@ -45,12 +38,10 @@ def disable():
     """
     Disable Maintenance mode.
     """
-    ins_path = current_app.instance_path
-    main_file = os.path.join(ins_path, 'under_maintenance')
-
-    if os.path.exists(main_file) and os.path.isfile(main_file):
+    _path = current_app.extensions['maintenance'].lock_filepath()
+    if os.path.exists(_path) and os.path.isfile(_path):
         try:
-            os.remove(main_file)
+            os.remove(_path)
         except Exception as e:  # pragma: no cover
             click.echo(e)
             return False

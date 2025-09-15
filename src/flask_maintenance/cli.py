@@ -22,21 +22,21 @@ def enable():
     if not os.path.exists(ins_path):
         try:
             os.makedirs(ins_path)
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             click.echo(e)
             return False
 
     try:
         open(os.path.join(ins_path, 'under_maintenance'), 'w').close()
         result = True
-    except Exception as e:
+    except Exception as e:  # pragma: no cover
         click.echo(e)
 
     if result:
         click.echo('maintenance mode enabled.')
         return True
 
-    return False
+    return False  # pragma: no cover
 
 
 @maintenance.command()
@@ -51,7 +51,7 @@ def disable():
     if os.path.exists(main_file) and os.path.isfile(main_file):
         try:
             os.remove(main_file)
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             click.echo(e)
             return False
 

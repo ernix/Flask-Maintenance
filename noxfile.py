@@ -14,4 +14,4 @@ def tests(session):
     session.install("flask", "mock", "pytest", "pytest-cov")
     session.install("-e", ".")
     session.run("pytest", "--cov=flask_maintenance", "--cov-report=")
-    session.run("coverage", "report", "--show-missing", "--fail-under=80")
+    session.run("coverage", "report", "--show-missing", "--fail-under=100")

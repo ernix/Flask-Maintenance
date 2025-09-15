@@ -3,14 +3,11 @@ import os
 import pytest
 from flask import Flask, current_app
 
-from flask_maintenance import Maintenance
-
 
 @pytest.fixture
 def app():
     app = Flask(__name__)
     app.route("/")(lambda: "Hello World")
-    Maintenance(app)
     return app
 
 

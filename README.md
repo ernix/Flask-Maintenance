@@ -1,6 +1,6 @@
 # Flask-Maintenance
 
-Adds maintenane mode capability to your Flask app.
+Adds maintenance mode capability to your Flask app.
 
 ## Installing:
 

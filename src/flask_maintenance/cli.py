@@ -1,5 +1,6 @@
 import os
 import click
+import json
 from flask import current_app
 from flask.cli import with_appcontext
 
@@ -11,25 +12,23 @@ def maintenance():
 
 
 @maintenance.command()
+@click.option("--redirect", default=None, help="Redirect all requests, instead of 503")
 @with_appcontext
-def enable():
+def enable(redirect):
     """
     Enable Maintenance mode.
     """
-    result = False
     _path = current_app.extensions['maintenance'].lock_filepath()
     os.makedirs(os.path.dirname(_path), exist_ok=True)
     try:
-        open(_path, 'w').close()
-        result = True
+        with open(_path, 'w') as fp:
+            json.dump(dict(redirect=redirect), fp)
     except Exception as e:  # pragma: no cover
         click.echo(e)
+        return False
 
-    if result:
-        click.echo('maintenance mode enabled.')
-        return True
-
-    return False  # pragma: no cover
+    click.echo('maintenance mode enabled.')
+    return True
 
 
 @maintenance.command()
@@ -39,11 +38,10 @@ def disable():
     Disable Maintenance mode.
     """
     _path = current_app.extensions['maintenance'].lock_filepath()
-    if os.path.exists(_path) and os.path.isfile(_path):
-        try:
-            os.remove(_path)
-        except Exception as e:  # pragma: no cover
-            click.echo(e)
-            return False
-
-    click.echo('maintenance mode disabled.')
+    try:
+        os.remove(_path)
+    except Exception as e:  # pragma: no cover
+        click.echo(e)
+        return False
+    else:
+        click.echo('maintenance mode disabled.')

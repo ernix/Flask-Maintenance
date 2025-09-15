@@ -20,3 +20,20 @@ def test_maintenance_commands(client, runner):
 
     response = client.get("/")
     assert response.status_code == 200
+
+
+def test_redirect(client, runner):
+    result = runner.invoke(maintenance_cli, args=["enable", "--redirect", "https://example.com/"])
+    assert result.exit_code == 0
+    assert "maintenance mode enabled." in result.output
+
+    response = client.get("/")
+    assert response.status_code == 302
+    assert response.location == "https://example.com/"
+
+    result = runner.invoke(maintenance_cli, args=["disable"])
+    assert result.exit_code == 0
+    assert "maintenance mode disabled." in result.output
+
+    response = client.get("/")
+    assert response.status_code == 200

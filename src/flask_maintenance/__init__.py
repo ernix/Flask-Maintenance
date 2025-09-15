@@ -1,7 +1,9 @@
 import os
+import json
 from flask import (
     abort,
     current_app,
+    redirect,
     request
 )
 
@@ -49,7 +51,23 @@ class Maintenance:
         """
         Maintenance mode handler.
         """
-        if request.endpoint != 'static':
-            _path = self.lock_filepath()
-            if os.path.exists(_path) and os.path.isfile(_path):
-                abort(503)
+        # TODO: Use current_app.static_folder
+        if request.endpoint == 'static':  # pragma: no cover
+            return
+
+        _path = self.lock_filepath()
+        try:
+            with open(_path, 'r') as fp:
+                options = json.load(fp)
+
+            dst = options.get('redirect')
+            if dst is not None:
+                return redirect(dst)
+        except FileNotFoundError:
+            return
+        except json.JSONDecodeError:  # pragma: no cover
+            pass
+        except KeyError: # pragma: no cover
+            pass
+
+        abort(503)

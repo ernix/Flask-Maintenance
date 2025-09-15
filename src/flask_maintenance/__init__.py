@@ -51,8 +51,8 @@ class Maintenance:
         """
         Maintenance mode handler.
         """
-        # TODO: Use current_app.static_folder
-        if request.endpoint == 'static':  # pragma: no cover
+        ep = request.endpoint
+        if ep is not None and ep.split('.')[-1] == 'static':
             return
 
         _path = self.lock_filepath()

@@ -1,7 +1,7 @@
 import os
 
 import pytest
-from flask import Flask, Response, current_app
+from flask import Blueprint, Flask, Response, current_app
 
 
 @pytest.fixture
@@ -16,6 +16,16 @@ def app():
             mimetype="text/css",
         ),
     )
+    bp = Blueprint("bp", __name__, url_prefix="/bp", static_folder=None)
+    bp.add_url_rule(
+        "/static/substyle.css",
+        endpoint="static",
+        view_func=lambda: Response(
+            "body{background-color:black;}",
+            mimetype="text/css",
+        ),
+    )
+    app.register_blueprint(bp)
     return app
 
 

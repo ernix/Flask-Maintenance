@@ -83,7 +83,5 @@ class Maintenance:
             return None
         except json.JSONDecodeError:  # pragma: no cover
             pass
-        except KeyError:  # pragma: no cover
-            pass
 
         abort(503)

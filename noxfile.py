@@ -8,7 +8,7 @@ def lint(session):
     session.run("python", "-m", "twine", "check", "dist/*")
 
 
-@nox.session(python=["3.9", "3.10", "3.11", "3.12", "3.13"])
+@nox.session(python=["3.10", "3.11", "3.12", "3.13"])
 def tests(session):
     """Run the test suite"""
     session.install("flask", "mock", "pytest", "pytest-cov")
